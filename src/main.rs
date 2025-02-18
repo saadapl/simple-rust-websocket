@@ -26,7 +26,7 @@ async fn main() {
     let routes = static_files.or(ws_route);
 
     println!("Server running on http://0.0.0.0:3030");
-    warp::serve(routes).run(([0, 0, 0, 0], 3030)).await;
+    warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
 }
 
 // Middleware to pass database connection
