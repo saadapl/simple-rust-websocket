@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sync Slider</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        #sliderContainer {
+            text-align: center;
+        }
+
+        #slider {
+            width: 300px;
+        }
+
+        #valueDisplay {
+            margin-top: 10px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="sliderContainer">
+        <input type="range" id="slider" min="0" max="100" value="50">
+        <div id="valueDisplay">50</div>
+    </div>
+
+    <script>
+        // Update this URL to the backend server's WebSocket URL
+        const socket = new WebSocket("ws://127.0.0.1:3030/ws"); 
+        const slider = document.getElementById("slider");
+        const valueDisplay = document.getElementById("valueDisplay");
+
+        socket.onopen = () => {
+            console.log("Connected to WebSocket server");
+        };
+
+        socket.onmessage = (event) => {
+            console.log("Message from server:", event.data);
+            updateSlider(event.data);
+        };
+
+        slider.addEventListener("input", () => {
+            const value = slider.value;
+            valueDisplay.textContent = value; // Display the slider value
+            socket.send(value); // Send the value to the server
+        });
+
+        function updateSlider(value) {
+            slider.value = value;
+            valueDisplay.textContent = value;
+        }
+    </script>
+
+</body>
+</html>
